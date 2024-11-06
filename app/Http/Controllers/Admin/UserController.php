@@ -21,16 +21,20 @@ class UserController extends Controller
             });
         }
 
-
         $users = $query->paginate(10);
-        $total = $query->count();
 
-        return view('admin.user.index', compact('user', 'keyword', 'total'));
+        return view('admin.users.index', [
+            'users' => $users,
+            'keyword' => $keyword,
+            'total' => $users->total(),
+        ]);
     }
 
     //会員詳細ページ
     public function show(User $user)
     {
-        return view('admin.user.show',compact('user'));
+        return view('admin.users.show', [
+            'user' => $user,
+        ]);
     }
 }
