@@ -12,16 +12,12 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $keyword = $request->input('keyword');
-        $query = User::query();
-
-        if (!empty($keyword)) {
-            $query->where(function($query) use ($keyword) {
-                $query->where('name', 'LIKE', "%{$keyword}%")
-                      ->orWhere('kana', 'LIKE', "%{$keyword}%");
-            });
-        }
-
-        $users = $query->paginate(10);
+        $users = User::query()
+            ->when($keyword, function($query, $keyword) {
+                return $query->where('name', 'like', "%{$keyword}%")
+                             ->orWhere('kana', 'like', "%{$keyword}%");
+            })
+            ->paginate(10);
 
         return view('admin.users.index', [
             'users' => $users,
