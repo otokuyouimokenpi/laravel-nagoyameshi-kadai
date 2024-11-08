@@ -17,7 +17,7 @@ class UserController extends Controller
                 return $query->where('name', 'like', "%{$keyword}%")
                              ->orWhere('kana', 'like', "%{$keyword}%");
             })
-            ->paginate(10);
+            ->paginate(15);
 
         return view('admin.users.index', [
             'users' => $users,
