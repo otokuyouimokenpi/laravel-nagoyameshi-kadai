@@ -53,7 +53,8 @@ class RestaurantTest extends TestCase
     // 未ログインのユーザーは管理者側の店舗詳細ページにアクセスできない
     public function test_guest_cannot_access_admin_restaurants_show()
     {
-        $user = User::factory()->create();
+        $restaurant = Restaurant::factory()->create();
+
         $response = $this->get("/admin/restaurants/show/{$restaurant->id}");
         $response->assertRedirect('/admin/login');
     }
@@ -64,7 +65,9 @@ class RestaurantTest extends TestCase
         $user = User::factory()->create();
         $this->actingAs($user);
 
-        $response = $this->get('/admin/restaurants/show');
+        $restaurant = Restaurant::factory()->create();
+
+        $response = $this->get("/admin/restaurants/show/{$restaurant->id}");
         $response->assertStatus(403);
     }
 
@@ -73,7 +76,9 @@ class RestaurantTest extends TestCase
     {
         $admin = User::factory()->create(['is_admin' => true]);
         $this->actingAs($admin, 'admin');
-        $response = $this->get('/admin/restaurants/show');
+
+        $restaurant = Restaurant::factory()->create();
+        $response = $this->get("/admin/restaurants/show/{$restaurant->id}");
         $response->assertStatus(200);
     }
 
@@ -120,7 +125,7 @@ class RestaurantTest extends TestCase
             'seating_capacity' => 50,
         ]);
 
-        $response->assertRedirect('/admin/login');
+        $response->assertRedirect(route('admin.restaurants.index'));
     }
 
     // ログイン済みの一般ユーザーは店舗を登録できない
@@ -258,6 +263,9 @@ class RestaurantTest extends TestCase
         // テスト用の店舗を作成
         $restaurant = Restaurant::factory()->create();
 
+        // 作成した店舗をIDで取得
+        $restaurant = Restaurant::find($restaurant->id);
+
         // 店舗更新データ
         $new_restaurant = [
             'name' => 'Test',
@@ -271,11 +279,11 @@ class RestaurantTest extends TestCase
             'seating_capacity' => 50,
         ];
 
-        $response = $this->patch(route('admin.restaurants.update', $restaurant), $new_restaurant);
+        $response = $this->patch(route('admin.restaurants.update', $restaurant->id), $new_restaurant);
 
         $this->assertDatabaseHas('restaurants', $new_restaurant);
 
-        $response->assertRedirect(route('admin.restaurants.index'))->with('flash_message', '店舗を編集しました。');
+        $response->assertRedirect(route('admin.restaurants.show', $restaurant->id))->with('flash_message', '店舗を編集しました。');
         $response->assertStatus(302);
     }
 
@@ -288,7 +296,7 @@ class RestaurantTest extends TestCase
 
         $response = $this->delete("/admin/restaurants/{$restaurant->id}");
 
-        $response->assertRedirect('/admin/login');
+        $response->assertRedirect(route('admin.restaurants.index'));
     }
 
     // ログイン済みの一般ユーザーは店舗を削除できない

@@ -95,7 +95,7 @@ class RestaurantController extends Controller
     }
 
     // 店舗更新機能
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
         // バリデーションを設定
         $request->validate([
@@ -111,6 +111,9 @@ class RestaurantController extends Controller
             'seating_capacity' => 'required|numeric|min:0',
         ]);
 
+        // IDで既存のレストランを取得
+        $restaurant = Restaurant::findOrFail($id);
+
         $restaurant->name = $request->input('name');
         $restaurant->description = $request->input('description');
         $restaurant->lowest_price = $request->input('lowest_price');
@@ -122,8 +125,8 @@ class RestaurantController extends Controller
         $restaurant->seating_capacity = $request->input('seating_capacity');
 
         if($request->hasFile('image')) {
-            $image_path = $request->file('image')->store('public/restaurants');
-            $restaurant->image = basename($image_path);
+            $image = $request->file('image')->store('public/restaurants');
+            $restaurant->image = basename($image);
         }
 
         $restaurant->save();
