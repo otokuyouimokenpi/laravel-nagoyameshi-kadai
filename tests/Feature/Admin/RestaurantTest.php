@@ -5,6 +5,7 @@ namespace Tests\Feature\Admin;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Admin;
 use App\Models\Restaurant;
@@ -43,8 +44,6 @@ class RestaurantTest extends TestCase
     // ログイン済みの管理者は管理者側の店舗一覧ページにアクセスできる
     public function test_admin_can_access_admin_restaurants_index()
     {
-        $this->withoutExceptionHandling();
-
         $admin = User::factory()->create(['is_admin' => true]);
         $this->actingAs($admin, 'admin');
         $response = $this->get('/admin/restaurants');
