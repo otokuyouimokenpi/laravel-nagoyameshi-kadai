@@ -39,5 +39,5 @@ Route::controller(RestaurantController::class)->group(function () {
 Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
     Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
     Route::get('/users/{user}', [UserController::class, 'show'])->name('admin.users.show');
-    Route::resource('restaurants', RestaurantController::class)->only(['index', 'show'])->names('restaurants');
+    Route::resource('restaurants', RestaurantController::class)->only(['index', 'show', 'store', 'edit', 'update'])->names('restaurants');
 });
