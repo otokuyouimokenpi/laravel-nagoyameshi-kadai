@@ -133,7 +133,7 @@ class CategoryTest extends TestCase
     {
         $admin = User::factory()->create(['is_admin' => true]);
 
-        $this->actingAs($admin, 'admin');
+        // $this->actingAs($admin, 'admin');
 
         $category = Category::factory()->create();
 
@@ -141,7 +141,7 @@ class CategoryTest extends TestCase
             'name' => 'Test',
         ];
 
-        $response = $this->patch(route('admin.categories.update', $category->id), $new_category);
+        $response = $this->actingAs($admin, 'admin')->patch(route('admin.categories.update', $category->id), $new_category);
 
         $this->assertDatabaseHas('categories', $new_category);
 
