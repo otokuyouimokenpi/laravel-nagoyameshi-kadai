@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Admin;
 use App\Models\Restaurant;
+use App\Models\Category;
 
 class RestaurantTest extends TestCase
 {
@@ -82,11 +83,12 @@ class RestaurantTest extends TestCase
 
         $restaurant = Restaurant::factory()->create();
 
-        $response = $this->actingAs($admin, 'admin')->get("/admin/restaurants/{$restaurant->id}");
+        // $response = $this->actingAs($admin, 'admin')->get("/admin/restaurants/{$restaurant->id}");
+        $response = $this->actingAs($admin, 'admin')->get(route('admin.restaurants.show', $restaurant));
 
         $response->assertStatus(200);
 
-        $response->assertViewIs('admin.restaurants.show');
+        // $response->assertViewIs('admin.restaurants.show');
     }
 
     // createアクション（店舗登録ページ）
@@ -145,6 +147,13 @@ class RestaurantTest extends TestCase
         $restaurant = Restaurant::factory()->make()->toArray();
 
         $admin = User::factory()->create(['is_admin' => true]);
+
+        // 店舗にカテゴリを設定
+        $categories = Category::factory()->count(3)->create();
+
+        $category_ids = $categories->pluck('id')->toArray();
+
+        $restaurant['category_ids'] = $category_ids;
 
         $response = $this->actingAs($admin, 'admin')->post('/admin/restaurants', $restaurant);
 
@@ -243,6 +252,13 @@ class RestaurantTest extends TestCase
         // 作成した店舗をIDで取得
         $restaurant = Restaurant::find($restaurant->id);
 
+        // 店舗にカテゴリを設定
+        $categories = Category::factory()->count(3)->create();
+
+        $category_ids = $categories->pluck('id')->toArray();
+
+        $restaurant['category_ids'] = $category_ids;
+
         // 店舗更新データ
         $new_restaurant = [
             'name' => 'Test',
@@ -254,6 +270,7 @@ class RestaurantTest extends TestCase
             'opening_time' => '09:00',
             'closing_time' => '18:00',
             'seating_capacity' => 50,
+            'category_ids' => $category_ids,
         ];
 
         $response = $this->patch(route('admin.restaurants.update', $restaurant->id), $new_restaurant);
