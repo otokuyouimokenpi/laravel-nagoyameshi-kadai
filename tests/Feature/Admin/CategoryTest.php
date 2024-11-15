@@ -133,17 +133,17 @@ class CategoryTest extends TestCase
     {
         $admin = User::factory()->create(['is_admin' => true]);
 
-        // $this->actingAs($admin, 'admin');
+        $this->actingAs($admin, 'admin');
 
-        $old_category = Category::factory()->create();
+        $category = Category::factory()->create();
 
-        $new_category_date = [
+        $new_category_data = [
             'name' => '新しいカテゴリ',
         ];
 
-        $response = $this->actingAs($admin, 'admin')->patch(route('admin.categories.update', $old_category), $new_category_date);
+        $response = $this->patch(route('admin.categories.update', $category->id), $new_category_data);
 
-        $this->assertDatabaseMissing('categories', $new_category_data);
+        $this->assertDatabaseHas('categories', $new_category_data);
 
         $response->assertRedirect(route('admin.categories.index'));
     }

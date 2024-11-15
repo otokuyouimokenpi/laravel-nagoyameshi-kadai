@@ -40,7 +40,7 @@ class CategoryController extends Controller
         return redirect()->route('admin.categories.index')->with('flash_message', 'カテゴリを登録しました。');
     }
 
-    public function update(Request $request)
+    public function update(Request $request, Category $category)
     {
         $request->validate([
             'name' => 'required',
