@@ -152,7 +152,7 @@ class RestaurantController extends Controller
         $restaurant->regular_holidays()->sync($regular_holiday_ids);
 
 
-    return redirect()->route('admin.restaurants.show', $restaurant)->with('flash_message', '店舗を編集しました。');
+        return redirect()->route('admin.restaurants.show', $restaurant)->with('flash_message', '店舗を編集しました。');
     }
 
     // 店舗削除機能

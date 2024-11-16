@@ -5,6 +5,8 @@ use App\Http\Controllers\Admin;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\RestaurantController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\TermController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,4 +36,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth:admin
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth:admin'], function () {
     Route::resource('categories', Admin\CategoryController::class)->only(['index', 'store', 'update', 'destroy']);
+});
+
+Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth:admin'], function () {
+    Route::resource('company', Admin\CompanyController::class)->only(['index', 'edit', 'update']);
+});
+
+Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth:admin'], function () {
+    Route::resource('terms', Admin\TermController::class)->only(['index', 'edit', 'update']);
 });
