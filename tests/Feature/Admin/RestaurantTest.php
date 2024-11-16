@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\Admin;
 use App\Models\Restaurant;
 use App\Models\Category;
+use App\Models\RegularHoliday;
 
 class RestaurantTest extends TestCase
 {
@@ -155,6 +156,13 @@ class RestaurantTest extends TestCase
 
         $restaurant['category_ids'] = $category_ids;
 
+        // 店舗に定休日を設定
+        $regular_holiday = RegularHoliday::factory()->count(3)->create();
+
+        $regular_holiday_ids = $regular_holiday->pluck('id')->toArray();
+
+        $restaurant['regular_holiday_ids'] = $regular_holiday_ids;
+
         $response = $this->actingAs($admin, 'admin')->post('/admin/restaurants', $restaurant);
 
         $response->assertRedirect(route('admin.restaurants.index'))->with('flash_message', '店舗を登録しました。');
@@ -259,6 +267,13 @@ class RestaurantTest extends TestCase
 
         $restaurant['category_ids'] = $category_ids;
 
+        // 店舗に定休日を設定
+        $regular_holiday = RegularHoliday::factory()->count(3)->create();
+
+        $regular_holiday_ids = $regular_holiday->pluck('id')->toArray();
+
+        $restaurant['regular_holiday_ids'] = $regular_holiday_ids;
+
         // 店舗更新データ
         $new_restaurant = [
             'name' => 'Test',
@@ -271,6 +286,7 @@ class RestaurantTest extends TestCase
             'closing_time' => '18:00',
             'seating_capacity' => 50,
             'category_ids' => $category_ids,
+            'regular_holiday_ids' => $regular_holiday_ids,
         ];
 
         $response = $this->patch(route('admin.restaurants.update', $restaurant->id), $new_restaurant);
