@@ -24,18 +24,20 @@ class CompanyController extends Controller
     }
 
     // updateアクション（会社概要更新機能）
-    public function update(Request $request, Company $company)
+    public function update(Request $request, $id)
     {
-        $request = validate([
+        $request->validate([
             'name' => 'required',
             'postal_code' => 'required|numeric|digits:7',
             'address' => 'required',
-            'representative	' => 'required',
+            'representative' => 'required',
             'establishment_date' => 'required',
             'capital' => 'required',
             'business' => 'required',
             'number_of_employees' => 'required',
         ]);
+
+        $company = Company::findOrFail($id);
 
         $company->name = $request->input('name');
         $company->postal_code = $request->input('postal_code');
@@ -45,7 +47,8 @@ class CompanyController extends Controller
         $company->capital = $request->input('capital');
         $company->business = $request->input('business');
         $company->number_of_employees = $request->input('number_of_employees');
-        $restaurant->save();
+
+        $company->save();
 
         return redirect()->route('admin.company.index', $company)->with('flash_message', '会社概要を編集しました。');
     }

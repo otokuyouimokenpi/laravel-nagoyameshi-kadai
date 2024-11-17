@@ -25,12 +25,12 @@ class TermController extends Controller
     // updateアクション（利用規約更新機能）
     public function update(Request $request, Term $term)
     {
-        $request = validate([
+        $request->validate([
             'content' => 'required',
         ]);
 
         $term->content = $request->input('content');
-        $restaurant->save();
+        $term->save();
 
         return redirect()->route('admin.terms.index', $term)->with('flash_message', '利用規約を編集しました。');
     }

@@ -23,6 +23,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::group(['middleware' => 'guest:admin'], function () {
+    Route::get('company', [CompanyController::class, 'index'])->name('company.index');
+    Route::get('terms', [TermController::class, 'index'])->name('terms.index');
+});
+
 require __DIR__.'/auth.php';
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth:admin'], function () {
