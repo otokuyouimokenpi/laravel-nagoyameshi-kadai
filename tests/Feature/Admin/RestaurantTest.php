@@ -84,12 +84,9 @@ class RestaurantTest extends TestCase
 
         $restaurant = Restaurant::factory()->create();
 
-        // $response = $this->actingAs($admin, 'admin')->get("/admin/restaurants/{$restaurant->id}");
         $response = $this->actingAs($admin, 'admin')->get(route('admin.restaurants.show', $restaurant));
 
         $response->assertStatus(200);
-
-        // $response->assertViewIs('admin.restaurants.show');
     }
 
     // createアクション（店舗登録ページ）
