@@ -16,12 +16,12 @@ class CompanyTest extends TestCase
     /**
      * A basic feature test example.
      */
-    public function test_example(): void
-    {
-        $response = $this->get('/');
+    // public function test_example(): void
+    // {
+    //     $response = $this->get('/');
 
-        $response->assertStatus(200);
-    }
+    //     $response->assertStatus(200);
+    // }
 
     // indexアクション（会社概要ページ）
     // 未ログインのユーザーは管理者側の会社概要ページにアクセスできない

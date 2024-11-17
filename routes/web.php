@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\RestaurantController;
 use App\Http\Controllers\Admin\CategoryController;
@@ -19,8 +20,9 @@ use App\Http\Controllers\TermController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+// 会員
+Route::group(['middleware' => 'guest:admin'], function () {
+    Route::get('home', [HomeController::class, 'index'])->name('home');
 });
 
 Route::group(['middleware' => 'guest:admin'], function () {
@@ -30,6 +32,7 @@ Route::group(['middleware' => 'guest:admin'], function () {
 
 require __DIR__.'/auth.php';
 
+// 管理者
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth:admin'], function () {
     Route::get('home', [Admin\HomeController::class, 'index'])->name('home');
     Route::resource('users', Admin\UserController::class)->only(['index', 'show']);

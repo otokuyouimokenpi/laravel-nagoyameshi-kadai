@@ -16,12 +16,12 @@ class TermTest extends TestCase
     /**
      * A basic feature test example.
      */
-    public function test_example(): void
-    {
-        $response = $this->get('/');
+    // public function test_example(): void
+    // {
+    //     $response = $this->get('/');
 
-        $response->assertStatus(200);
-    }
+    //     $response->assertStatus(200);
+    // }
 
     // indexアクション（利用規約ページ）
     // 未ログインのユーザーは管理者側の利用規約ページにアクセスできない

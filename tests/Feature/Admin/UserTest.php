@@ -15,12 +15,12 @@ class UserTest extends TestCase
      /**
      * A basic feature test example.
      */
-    public function test_example(): void
-    {
-        $response = $this->get('/');
+    // public function test_example(): void
+    // {
+    //     $response = $this->get('/');
 
-        $response->assertStatus(200);
-    }
+    //     $response->assertStatus(200);
+    // }
 
     //未ログインのユーザーは管理者側の会員一覧ページにアクセスできない
     public function test_guest_cannot_access_admin_users_index()

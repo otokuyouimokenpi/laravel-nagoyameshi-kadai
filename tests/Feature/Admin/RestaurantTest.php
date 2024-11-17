@@ -18,12 +18,12 @@ class RestaurantTest extends TestCase
     /**
      * A basic feature test example.
      */
-    public function test_example(): void
-    {
-        $response = $this->get('/');
+    // public function test_example(): void
+    // {
+    //     $response = $this->get('/');
 
-        $response->assertStatus(200);
-    }
+    //     $response->assertStatus(200);
+    // }
 
     // indexアクション（店舗一覧ページ）
     //未ログインのユーザーは管理者側の店舗一覧ページにアクセスできない
