@@ -28,7 +28,7 @@ class HomeTest extends TestCase
     // 未ログインのユーザーは会員側のトップページにアクセスできる
     public function test_guest_can_access_top_page()
     {
-        $response = $this->get('home');
+        $response = $this->get('/');
 
         $response->assertStatus(200);
     }
@@ -38,7 +38,7 @@ class HomeTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $response = $this->actingAs($user)->get('home');
+        $response = $this->actingAs($user)->get('/');
 
         $response->assertStatus(200);
     }
@@ -55,7 +55,7 @@ class HomeTest extends TestCase
         $admin->password = Hash::make('nagoyameshi');
         $admin->save();
 
-        $response = $this->actingAs($admin, 'admin')->get('home');
+        $response = $this->actingAs($admin, 'admin')->get('/');
 
         $response->assertRedirect('/admin/home');
     }

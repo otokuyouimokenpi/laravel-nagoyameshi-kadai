@@ -22,7 +22,7 @@ use App\Http\Controllers\TermController;
 
 // 会員
 Route::group(['middleware' => 'guest:admin'], function () {
-    Route::get('home', [HomeController::class, 'index'])->name('home');
+    Route::get('/', [HomeController::class, 'index'])->name('home');
 });
 
 Route::group(['middleware' => 'guest:admin'], function () {
