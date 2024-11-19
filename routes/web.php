@@ -4,8 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\Admin\RestaurantController;
-use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\RestaurantController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\TermController;
 
@@ -27,6 +27,10 @@ Route::group(['middleware' => 'guest:admin'], function () {
 
 Route::group(['middleware' => ['guest:admin','auth', 'verified']], function () {
     Route::resource('user', UserController::class)->only(['index', 'edit', 'update']);
+});
+
+Route::group(['middleware' => 'guest:admin'], function () {
+    Route::resource('restaurants', RestaurantController::class)->only(['index', 'show']);
 });
 
 
