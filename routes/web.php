@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\Admin\RestaurantController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\CompanyController;
@@ -24,6 +24,12 @@ use App\Http\Controllers\TermController;
 Route::group(['middleware' => 'guest:admin'], function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
 });
+
+Route::group(['middleware' => ['guest:admin','auth', 'verified']], function () {
+    Route::resource('user', UserController::class)->only(['index', 'edit', 'update']);
+});
+
+
 
 Route::group(['middleware' => 'guest:admin'], function () {
     Route::get('company', [CompanyController::class, 'index'])->name('company.index');
