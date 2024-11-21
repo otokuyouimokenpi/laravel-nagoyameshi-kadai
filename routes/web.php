@@ -8,6 +8,7 @@ use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\TermController;
+use App\Http\Controllers\SubscriptionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +34,20 @@ Route::group(['middleware' => 'guest:admin'], function () {
     Route::resource('restaurants', RestaurantController::class)->only(['index', 'show']);
 });
 
+// サブスクリプション
+// 管理者としてログインしていない、一般ユーザーとしてログイン済み（かつメール認証済み）、有料プランに未登録
+Route::group(['middleware' => 'guest:admin','auth', 'verified', NotSubscribed::class], function () {
+    Route::get('subscription/create', [SubscriptionController::class, 'create'])->name('subscription.create');
+    Route::post('subscription', [SubscriptionController::class, 'store'])->name('subscription.store');
+});
+
+// 管理者としてログインしていない、一般ユーザーとしてログイン済み（かつメール認証済み）、有料プランに登録済み
+Route::group(['middleware' => 'guest:admin','auth', 'verified', Subscribed::class], function () {
+    Route::get('subscription/edit', [SubscriptionController::class, 'edit'])->name('subscription.edit');
+    Route::patch('subscription', [SubscriptionController::class, 'update'])->name('subscription.update');
+    Route::get('subscription/cancel', [SubscriptionController::class, 'cancel'])->name('subscription.cancel');
+    Route::delete('subscription', [SubscriptionController::class, 'destroy'])->name('subscription.destroy');
+});
 
 
 Route::group(['middleware' => 'guest:admin'], function () {
