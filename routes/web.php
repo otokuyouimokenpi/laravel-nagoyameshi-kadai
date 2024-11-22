@@ -25,68 +25,60 @@ use App\Http\Controllers\TermController;
 
 // 会員
 Route::group(['middleware' => 'guest:admin'], function () {
+
     Route::get('/', [HomeController::class, 'index'])->name('home');
-});
 
-Route::group(['middleware' => ['guest:admin','auth', 'verified']], function () {
-    Route::resource('user', UserController::class)->only(['index', 'edit', 'update']);
-});
-
-Route::group(['middleware' => 'guest:admin'], function () {
     Route::resource('restaurants', RestaurantController::class)->only(['index', 'show']);
-});
 
-// サブスクリプション
-// 管理者としてログインしていない、一般ユーザーとしてログイン済み（かつメール認証済み）、有料プランに未登録
-Route::group(['middleware' => ['guest:admin', 'auth', 'verified', NotSubscribed::class]], function () {
-    Route::get('subscription/create', [SubscriptionController::class, 'create'])->name('subscription.create');
-    Route::post('subscription', [SubscriptionController::class, 'store'])->name('subscription.store');
-});
-
-// 管理者としてログインしていない、一般ユーザーとしてログイン済み（かつメール認証済み）、有料プランに登録済み
-Route::group(['middleware' => ['guest:admin', 'auth', 'verified', Subscribed::class]], function () {
-    Route::get('subscription/edit', [SubscriptionController::class, 'edit'])->name('subscription.edit');
-    Route::patch('subscription', [SubscriptionController::class, 'update'])->name('subscription.update');
-    Route::get('subscription/cancel', [SubscriptionController::class, 'cancel'])->name('subscription.cancel');
-    Route::delete('subscription', [SubscriptionController::class, 'destroy'])->name('subscription.destroy');
-});
-
-Route::group(['middleware' => ['guest:admin', 'auth', 'verified']], function () {
-    Route::resource('restaurants.reviews', ReviewController::class)->only(['index']);
-});
-
-Route::group(['middleware' => ['guest:admin', 'auth', 'verified', Subscribed::class]], function () {
-    Route::resource('restaurants.reviews', ReviewController::class)->only(['create', 'store', 'edit', 'update', 'destroy']);
-});
-
-
-
-
-Route::group(['middleware' => 'guest:admin'], function () {
     Route::get('company', [CompanyController::class, 'index'])->name('company.index');
+
     Route::get('terms', [TermController::class, 'index'])->name('terms.index');
+
+
+    Route::group(['middleware' => ['auth', 'verified']], function () {
+        Route::resource('user', UserController::class)->only(['index', 'edit', 'update']);
+
+        Route::resource('restaurants.reviews', ReviewController::class)->only(['index']);
+
+        // サブスクリプション
+        //一般ユーザとしてログイン済かつメール認証済で有料プラン未登録の場合
+        Route::group(['middleware' => [NotSubscribed::class]], function () {
+
+            Route::get('subscription/create', [SubscriptionController::class, 'create'])->name('subscription.create');
+
+            Route::post('subscription', [SubscriptionController::class, 'store'])->name('subscription.store');
+        });
+
+        //一般ユーザとしてログイン済かつメール認証済で有料プラン登録済の場合
+        Route::group(['middleware' => [Subscribed::class]], function () {
+
+            Route::get('subscription/edit', [SubscriptionController::class, 'edit'])->name('subscription.edit');
+
+            Route::patch('subscription', [SubscriptionController::class, 'update'])->name('subscription.update');
+
+            Route::get('subscription/cancel', [SubscriptionController::class, 'cancel'])->name('subscription.cancel');
+
+            Route::delete('subscription', [SubscriptionController::class, 'destroy'])->name('subscription.destroy');
+
+            Route::resource('restaurants.reviews', ReviewController::class)->only(['create', 'store', 'edit', 'update', 'destroy']);
+        });
+    });
 });
 
 require __DIR__.'/auth.php';
 
 // 管理者
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth:admin'], function () {
+
     Route::get('home', [Admin\HomeController::class, 'index'])->name('home');
+
     Route::resource('users', Admin\UserController::class)->only(['index', 'show']);
-});
 
-Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth:admin'], function () {
     Route::resource('restaurants', Admin\RestaurantController::class)->only(['index', 'show', 'create', 'store', 'edit', 'update', 'destroy']);
-});
 
-Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth:admin'], function () {
     Route::resource('categories', Admin\CategoryController::class)->only(['index', 'store', 'update', 'destroy']);
-});
 
-Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth:admin'], function () {
     Route::resource('company', Admin\CompanyController::class)->only(['index', 'edit', 'update']);
-});
 
-Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth:admin'], function () {
     Route::resource('terms', Admin\TermController::class)->only(['index', 'edit', 'update']);
 });

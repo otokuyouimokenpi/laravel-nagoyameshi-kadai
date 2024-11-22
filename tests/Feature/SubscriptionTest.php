@@ -2,12 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Models\Admin;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-use App\Models\Admin;
 
 class SubscriptionTest extends TestCase
 {
@@ -97,7 +97,6 @@ class SubscriptionTest extends TestCase
         $response->assertRedirect(route('home'));
 
         $user->refresh();
-
         $this->assertTrue($user->subscribed('premium_plan'));
     }
 
@@ -109,7 +108,7 @@ class SubscriptionTest extends TestCase
         $user->newSubscription('premium_plan', 'price_1QNWqpRrZ6MH2neTyFK3pIP0')->create('pm_card_visa');
 
         $request_parameter = [
-            'paymentMethodId' => 'pm_card_visa'
+             'paymentMethodId' => 'pm_card_visa'
         ];
 
         $response = $this->actingAs($user)->post(route('subscription.store'), $request_parameter);
@@ -132,9 +131,9 @@ class SubscriptionTest extends TestCase
             'paymentMethodId' => 'pm_card_visa'
         ];
 
-        $response = $this->actingAs($admin, 'admin')->post(route('subscription.store', $request_parameter));
+        $response = $this->actingAs($admin, 'admin')->post(route('subscription.store'), $request_parameter);
 
-        $response->assertRedirect('/admin/home');
+        $response->assertRedirect(route('admin.home'));
     }
 
 
@@ -220,7 +219,7 @@ class SubscriptionTest extends TestCase
 
         $user->newSubscription('premium_plan', 'price_1QNWqpRrZ6MH2neTyFK3pIP0')->create('pm_card_visa');
 
-        $default_payment_method_id = $user->defaultPaymentMethod()->id;
+        $original_payment_method_id = $user->defaultPaymentMethod()->id;
 
         $request_parameter = [
             'paymentMethodId' => 'pm_card_mastercard'
@@ -230,7 +229,9 @@ class SubscriptionTest extends TestCase
 
         $response->assertRedirect(route('home'));
 
-        $this->assertNotEquals($default_payment_method_id, $user->defaultPaymentMethod()->id);
+        $user->refresh();
+
+        $this->assertNotEquals($original_payment_method_id, $user->defaultPaymentMethod()->id);
     }
 
     // ログイン済みの管理者はお支払い方法を更新できない
