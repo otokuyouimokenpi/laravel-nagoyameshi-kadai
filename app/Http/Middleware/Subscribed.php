@@ -17,7 +17,7 @@ class Subscribed
     {
         if (! $request->user()?->subscribed('premium_plan')) {
 
-            return redirect('subscription/create');
+            return redirect()->route('subscription.create');
         }
         return $next($request);
     }

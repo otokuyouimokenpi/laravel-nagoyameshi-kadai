@@ -25,4 +25,14 @@ class Restaurant extends Model
     {
         return $this->belongsToMany(RegularHoliday::class, 'regular_holiday_restaurant');
     }
+
+    // レビューとの1対多リレーションシップ
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    public function ratingSortable($query, $direction) {
+        return $query->withAvg('reviews', 'score')->orderBy('reviews_avg_score', $direction);
+    }
 }

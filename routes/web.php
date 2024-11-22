@@ -8,6 +8,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\TermController;
 
@@ -49,6 +50,16 @@ Route::group(['middleware' => ['guest:admin', 'auth', 'verified', Subscribed::cl
     Route::get('subscription/cancel', [SubscriptionController::class, 'cancel'])->name('subscription.cancel');
     Route::delete('subscription', [SubscriptionController::class, 'destroy'])->name('subscription.destroy');
 });
+
+Route::group(['middleware' => ['guest:admin', 'auth', 'verified']], function () {
+    Route::resource('restaurants.reviews', ReviewController::class)->only(['index']);
+});
+
+Route::group(['middleware' => ['guest:admin', 'auth', 'verified', Subscribed::class]], function () {
+    Route::resource('restaurants.reviews', ReviewController::class)->only(['create', 'store', 'edit', 'update', 'destroy']);
+});
+
+
 
 
 Route::group(['middleware' => 'guest:admin'], function () {

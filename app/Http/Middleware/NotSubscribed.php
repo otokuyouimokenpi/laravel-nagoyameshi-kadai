@@ -17,7 +17,7 @@ class NotSubscribed
     {
         if (! $request->user()?->subscribed('premium_plan')) {
 
-            return redirect('subscription/edit');
+            return redirect()->route('subscription.edit');
         }
         return $next($request);
     }
