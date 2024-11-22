@@ -31,7 +31,7 @@ class SubscriptionController extends Controller
     {
         $user = Auth::user();
 
-        $intent = Auth::user()->createSetupIntent();
+        $intent = $user->createSetupIntent();
 
         return view('subscription.edit', compact('user', 'intent'));
     }

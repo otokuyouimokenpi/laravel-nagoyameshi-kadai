@@ -19,7 +19,6 @@ class NotSubscribed
 
             return redirect('subscription/edit');
         }
-
         return $next($request);
     }
 }

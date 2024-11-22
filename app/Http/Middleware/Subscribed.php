@@ -19,7 +19,6 @@ class Subscribed
 
             return redirect('subscription/create');
         }
-
         return $next($request);
     }
 }
