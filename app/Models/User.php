@@ -60,4 +60,9 @@ class User extends Authenticatable implements MustVerifyEmail
     public function reservations() {
         return $this->hasMany(Reservation::class);
     }
+
+    // お気に入りとの多対多リレーションシップ
+    public function favorite_restaurants() {
+        return $this->belongsToMany(Restaurant::class);
+    }
 }
